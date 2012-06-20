@@ -82,7 +82,7 @@
 
     [serialBytes appendData:[NSData dataWithBytes:framingbytes length:sizeof(framingbytes)]];
     
-    return serialBytes;
+    return [serialBytes autorelease];
     
 }
 
