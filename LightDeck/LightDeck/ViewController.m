@@ -21,7 +21,7 @@
 
 - (id) init {
     if ((self = [super init])) {
-        self.lightDeckController = [[LightDeckController alloc] init];
+        self.lightDeckController = [[[LightDeckController alloc] init] autorelease];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(lightsChanged:) name:@"LightsChanged" object:nil];
         
@@ -153,13 +153,7 @@
 
 - (void)setPort:(AMSerialPort *)newPort
 {
-    id old = nil;
-    
-    if (newPort != self.lightDeckController.port) {
-        old = self.lightDeckController.port;
-        self.lightDeckController.port = [newPort retain];
-        [old release];
-    }
+    self.lightDeckController.port = newPort;
 }
 
 

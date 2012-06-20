@@ -134,7 +134,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
     NSCharacterSet* delimiterSet = [NSCharacterSet
                                     characterSetWithCharactersInString:@"&;"] ;
     NSMutableDictionary* pairs = [NSMutableDictionary dictionary] ;
-    NSMutableArray *lights = [NSMutableArray new];
+    NSMutableArray *lights = [NSMutableArray array];
     [pairs setObject:lights forKey: @"lights"];
     
     NSScanner* scanner = [[[NSScanner alloc] initWithString:paramString] autorelease] ;

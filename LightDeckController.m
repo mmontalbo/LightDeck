@@ -36,8 +36,6 @@
         //listen for change to different device selection
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(selectedDevice:) name:@"DeviceSelected" object:nil];
         
-        //[self startServer];
-
         /// set up notifications
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didAddPorts:) name:AMSerialPortListDidAddPortsNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didRemovePorts:) name:AMSerialPortListDidRemovePortsNotification object:nil];
@@ -105,7 +103,6 @@
                  (lightNum -1 ) * 7 + channel
                  
                 */
-                [self.dmxchannels asdf];
                 [self.dmxchannels setChannel:[NSNumber numberWithInt:[lightNumber intValue]*7] toValue:tempBrightness];
                 //NSLog(@"%@",tempBrightness);
             }
@@ -166,7 +163,8 @@
 -(void) sendDMXSerialString {
     NSMutableData *serialData = [self.dmxchannels generateSerialData];
     NSError *writeError;
-    [self.port writeData:[NSMutableData dataWithData:serialData] error:&writeError];
+    [self.port writeData:[serialData retain] error:&writeError];
+    [serialData release];
 }
 
 # pragma mark Serial Port Stuff
