@@ -15,8 +15,6 @@
 		A230DCC3152B5D7700902C26 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = A230DCC1152B5D7700902C26 /* MainMenu.xib */; };
 		A230DCE6152B5D9300902C26 /* defaultChannelPreselections.plist in Resources */ = {isa = PBXBuildFile; fileRef = A230DCE0152B5D9300902C26 /* defaultChannelPreselections.plist */; };
 		A230DCE7152B5D9300902C26 /* defaultDMXValues.plist in Resources */ = {isa = PBXBuildFile; fileRef = A230DCE1152B5D9300902C26 /* defaultDMXValues.plist */; };
-		A230DCE8152B5D9300902C26 /* DMXChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = A230DCE3152B5D9300902C26 /* DMXChannel.m */; };
-		A230DCE9152B5D9300902C26 /* DMXChannels.m in Sources */ = {isa = PBXBuildFile; fileRef = A230DCE5152B5D9300902C26 /* DMXChannels.m */; };
 		A230DCF8152B5E9500902C26 /* AMSerialPort.m in Sources */ = {isa = PBXBuildFile; fileRef = A230DCEF152B5E9500902C26 /* AMSerialPort.m */; };
 		A230DCF9152B5E9500902C26 /* AMSerialPortAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = A230DCF1152B5E9500902C26 /* AMSerialPortAdditions.m */; };
 		A230DCFA152B5E9500902C26 /* AMSerialPortList.m in Sources */ = {isa = PBXBuildFile; fileRef = A230DCF3152B5E9500902C26 /* AMSerialPortList.m */; };
@@ -50,6 +48,8 @@
 		A2EACD2A152D5127009E7153 /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = A2EACD20152D5127009E7153 /* DDTTYLogger.m */; };
 		A2EACD2E152D513D009E7153 /* MyHTTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = A2EACD2D152D513D009E7153 /* MyHTTPConnection.m */; };
 		A2EACD31152D539F009E7153 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2EACD30152D539F009E7153 /* Security.framework */; };
+		C6D15E511591733900684A7F /* DMXChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = C6D15E4E1591733900684A7F /* DMXChannel.m */; };
+		C6D15E521591733900684A7F /* DMXChannels.m in Sources */ = {isa = PBXBuildFile; fileRef = C6D15E501591733900684A7F /* DMXChannels.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,10 +73,6 @@
 		A230DCD6152B5D7700902C26 /* LightDeckTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LightDeckTests.m; sourceTree = "<group>"; };
 		A230DCE0152B5D9300902C26 /* defaultChannelPreselections.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = defaultChannelPreselections.plist; path = ../defaultChannelPreselections.plist; sourceTree = "<group>"; };
 		A230DCE1152B5D9300902C26 /* defaultDMXValues.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = defaultDMXValues.plist; path = ../defaultDMXValues.plist; sourceTree = "<group>"; };
-		A230DCE2152B5D9300902C26 /* DMXChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMXChannel.h; path = ../DMXChannel.h; sourceTree = "<group>"; };
-		A230DCE3152B5D9300902C26 /* DMXChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMXChannel.m; path = ../DMXChannel.m; sourceTree = "<group>"; };
-		A230DCE4152B5D9300902C26 /* DMXChannels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMXChannels.h; path = ../DMXChannels.h; sourceTree = "<group>"; };
-		A230DCE5152B5D9300902C26 /* DMXChannels.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMXChannels.m; path = ../DMXChannels.m; sourceTree = "<group>"; };
 		A230DCEC152B5E9500902C26 /* AMSDKCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSDKCompatibility.h; sourceTree = "<group>"; };
 		A230DCED152B5E9500902C26 /* AMSerialErrors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialErrors.h; sourceTree = "<group>"; };
 		A230DCEE152B5E9500902C26 /* AMSerialPort.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AMSerialPort.h; sourceTree = "<group>"; };
@@ -142,6 +138,10 @@
 		A2EACD2D152D513D009E7153 /* MyHTTPConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyHTTPConnection.m; path = ../../MyHTTPConnection.m; sourceTree = "<group>"; };
 		A2EACD2F152D51AE009E7153 /* LightDeckController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LightDeckController.h; path = ../../LightDeckController.h; sourceTree = "<group>"; };
 		A2EACD30152D539F009E7153 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		C6D15E4D1591733900684A7F /* DMXChannel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMXChannel.h; sourceTree = "<group>"; };
+		C6D15E4E1591733900684A7F /* DMXChannel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMXChannel.m; sourceTree = "<group>"; };
+		C6D15E4F1591733900684A7F /* DMXChannels.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMXChannels.h; sourceTree = "<group>"; };
+		C6D15E501591733900684A7F /* DMXChannels.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMXChannels.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,11 +205,11 @@
 				A230DCEB152B5E9500902C26 /* SerialComm */,
 				A230DCEA152B5E6900902C26 /* Resources */,
 				A2EACD2F152D51AE009E7153 /* LightDeckController.h */,
+				C6D15E4D1591733900684A7F /* DMXChannel.h */,
+				C6D15E4E1591733900684A7F /* DMXChannel.m */,
+				C6D15E4F1591733900684A7F /* DMXChannels.h */,
+				C6D15E501591733900684A7F /* DMXChannels.m */,
 				A2A5C228152C11CB00B2D0D0 /* LightDeckController.m */,
-				A230DCE2152B5D9300902C26 /* DMXChannel.h */,
-				A230DCE3152B5D9300902C26 /* DMXChannel.m */,
-				A230DCE4152B5D9300902C26 /* DMXChannels.h */,
-				A230DCE5152B5D9300902C26 /* DMXChannels.m */,
 				A230DCBE152B5D7700902C26 /* AppDelegate.h */,
 				A230DCBF152B5D7700902C26 /* AppDelegate.m */,
 				A2EACD2C152D513D009E7153 /* MyHTTPConnection.h */,
@@ -454,8 +454,6 @@
 			files = (
 				A230DCB9152B5D7700902C26 /* main.m in Sources */,
 				A230DCC0152B5D7700902C26 /* AppDelegate.m in Sources */,
-				A230DCE8152B5D9300902C26 /* DMXChannel.m in Sources */,
-				A230DCE9152B5D9300902C26 /* DMXChannels.m in Sources */,
 				A230DCF8152B5E9500902C26 /* AMSerialPort.m in Sources */,
 				A230DCF9152B5E9500902C26 /* AMSerialPortAdditions.m in Sources */,
 				A230DCFA152B5E9500902C26 /* AMSerialPortList.m in Sources */,
@@ -484,6 +482,8 @@
 				A2EACD2E152D513D009E7153 /* MyHTTPConnection.m in Sources */,
 				A25B33D9154B9B1B005E037D /* ViewController.m in Sources */,
 				A2B2E838154F6B1C003A49AF /* MyWebSocket.m in Sources */,
+				C6D15E511591733900684A7F /* DMXChannel.m in Sources */,
+				C6D15E521591733900684A7F /* DMXChannels.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

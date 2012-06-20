@@ -46,25 +46,7 @@
         if(self.port) {
             [self initPort];
         }
-        
-        if([self.port isOpen]) {
-            //[port writeString:[self.dmxchannels generateSerialString] usingEncoding:NSASCIIStringEncoding error:NULL];
-            //NSLog(@"%@", [self.dmxchannels generateSerialString]);
-            
-            //NSMutableData *serialData = [self.dmxchannels generateSerialData];
-            
-            //[port writeData:[NSMutableData dataWithBytes:& serialData length:sizeof(serialData)] error:NULL]; 
-            //u_char test[] = {0x07, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0xff, 0xde, 0xad, 0xbe, 0xef};
-            
-            NSError *writeError;
-            //[port writeData:[NSMutableData dataWithBytes:test length:12] error:&writeError]; 
-            //[port writeData:[NSMutableData dataWithData:serialData] error:&writeError];
-            /*if (writeError) {
-             NSLog(@"Write error: %@",writeError);
-             }*/
-            //NSLog(@"%@", [[NSString alloc] initWithBytes:&serialData length:sizeof(serialData) encoding:NSASCIIStringEncoding]);
-        }
-        
+              
         return self;
         
     }
