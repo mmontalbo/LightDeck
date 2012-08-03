@@ -130,6 +130,7 @@ typedef enum {
              */
             [self.dmxchannels setChannel:[NSNumber numberWithInt:[lightNumber intValue]*7] toValue:tempBrightness];
             //NSLog(@"%@",tempBrightness);
+            [f release];
         }
         if ([aKey isEqualToString:@"color"]){
             NSString *tempColor = [params objectForKey:aKey];
@@ -177,7 +178,6 @@ typedef enum {
             
             //NSLog(@"%@",tempBrightness);
         }  
-        [f release];
     }
 }
 
