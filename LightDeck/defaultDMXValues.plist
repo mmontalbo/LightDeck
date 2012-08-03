@@ -292,6 +292,70 @@
 			<key>description</key>
 			<string>brightness</string>
 		</dict>
+		<dict>
+			<key>channel</key>
+			<integer>37</integer>
+			<key>value</key>
+			<integer>255</integer>
+			<key>description</key>
+			<string>red</string>
+		</dict>
+		<dict>
+			<key>channel</key>
+			<integer>38</integer>
+			<key>value</key>
+			<integer>255</integer>
+			<key>description</key>
+			<string>green</string>
+		</dict>
+		<dict>
+			<key>channel</key>
+			<integer>39</integer>
+			<key>value</key>
+			<integer>255</integer>
+			<key>description</key>
+			<string>blue</string>
+		</dict>
+		<dict>
+			<key>channel</key>
+			<integer>40</integer>
+			<key>value</key>
+			<integer>255</integer>
+			<key>description</key>
+			<string>brightness</string>
+		</dict>
+		<dict>
+			<key>channel</key>
+			<integer>41</integer>
+			<key>value</key>
+			<integer>255</integer>
+			<key>description</key>
+			<string>color_selection</string>
+		</dict>
+		<dict>
+			<key>channel</key>
+			<integer>42</integer>
+			<key>value</key>
+			<integer>255</integer>
+			<key>description</key>
+			<string>rotation</string>
+		</dict>
+		<dict>
+			<key>channel</key>
+			<integer>43</integer>
+			<key>value</key>
+			<integer>255</integer>
+			<key>description</key>
+			<string>strobe</string>
+		</dict>
+		<dict>
+			<key>channel</key>
+			<integer>44</integer>
+			<key>value</key>
+			<integer>255</integer>
+			<key>description</key>
+			<string>brightness</string>
+		</dict>
 	</array>
 </dict>
 </plist>

@@ -6,13 +6,32 @@
 //  Copyright (c) 2012 2215 22nd St. All rights reserved.
 //
 
+#define PARCAN_CHANNEL_THRESHOLD 6
+#define MEGAPANEL_CHANNEL_THRESHOLD 7
+#define TRIPHASE_CHANNEL_THRESHOLD 8
+
+#define MEGAPANEL_CHANNEL_BASE 37
+#define TRIPHASE_CHANNEL_BASE 38
+
+typedef enum {
+    kLightParcan,
+    kLightMegapanel,
+    kLightTriphase,
+    kLightUnknown
+} LightIdentifier;
+
 #import "LightDeckController.h"
 #import "DMXChannel.h"
 #import "AMSerialPortList.h"
 #import "AMSerialPortAdditions.h"
 
 @interface LightDeckController()
-//- (void)initPort;
+- (void)setDMXChannelsForParcan:(NSNumber *)lightNumber params:(NSDictionary *)params;
+- (void)setDMXChannelsForMegapanel:(NSNumber *)lightNumber params:(NSDictionary *)params;
+- (void)setDMXChannelsForTriphase:(NSNumber *)lightNumber params:(NSDictionary *)params;
+- (LightIdentifier)getLightIDFromChannel:(NSNumber *)lightNumber;
+- (void)setChannelsFromRGBString:(int)channelBase rgbString:(NSString *)rgbString;
+- (NSNumber *)getNumberFromString:(NSString *)floatString;
 @end
 
 @implementation LightDeckController
@@ -24,9 +43,9 @@
 
 - (id) init {
     
-    self.deviceName = @"";
-    
     if (self = [super init]) {
+        self.deviceName = @"";
+        
         // Initialize dmx channel values
         self.dmxchannels = [[[DMXChannels alloc] init] autorelease];
         
@@ -46,7 +65,7 @@
         if(self.port) {
             [self initPort];
         }
-              
+        
         return self;
         
     }
@@ -70,77 +89,177 @@
 
 -(void) setLights:(NSDictionary*)parameters {
     
-    NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-    [f setNumberStyle:NSNumberFormatterDecimalStyle]; 
-        
+    
     for (NSNumber *lightNumber in [parameters objectForKey:@"lights"]) {
-        for( NSString *aKey in parameters )
-        {
-            if ([aKey isEqualToString:@"brightness"]){
-                NSNumber *tempBrightness = [f numberFromString:[parameters objectForKey:aKey]];
-                /* The following line is a hack to make it work: it assumes all the lights have identical channels to multiply by 7
-                
-                    The correct solution would be another function setValueOf:dmxChannel forLight:identifier which uses the below method
-                 
-                 (lightNum -1 ) * 7 + channel
-                 
-                */
-                [self.dmxchannels setChannel:[NSNumber numberWithInt:[lightNumber intValue]*7] toValue:tempBrightness];
-                //NSLog(@"%@",tempBrightness);
-            }
-            if ([aKey isEqualToString:@"color"]){
-                NSString *tempColor = [parameters objectForKey:aKey];
-            
-                if ([tempColor isEqualToString:@"red"]) {
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+1] toValue:[NSNumber numberWithInt:1]];
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+2] toValue:[NSNumber numberWithInt:0]];
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+3] toValue:[NSNumber numberWithInt:0]];
-                }
-                
-                if ([tempColor isEqualToString:@"purple"]) {
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+1] toValue:[NSNumber numberWithInt:1]];
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+2] toValue:[NSNumber numberWithInt:0]];
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+3] toValue:[NSNumber numberWithInt:1]];
-                }
-                
-                if ([tempColor isEqualToString:@"blue"]) {
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+1] toValue:[NSNumber numberWithInt:0]];
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+2] toValue:[NSNumber numberWithInt:0]];
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+3] toValue:[NSNumber numberWithInt:1]];
-                }
-                
-                if ([tempColor isEqualToString:@"teal"]) {
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+1] toValue:[NSNumber numberWithInt:0]];
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+2] toValue:[NSNumber numberWithInt:1]];
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+3] toValue:[NSNumber numberWithInt:1]];
-                }
-                
-                if ([tempColor isEqualToString:@"green"]) {
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+1] toValue:[NSNumber numberWithInt:0]];
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+2] toValue:[NSNumber numberWithInt:1]];
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+3] toValue:[NSNumber numberWithInt:0]];
-                }
-                
-                if ([tempColor isEqualToString:@"white"]) {
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+1] toValue:[NSNumber numberWithInt:1]];
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+2] toValue:[NSNumber numberWithInt:1]];
-                    [self.dmxchannels setChannel:[NSNumber numberWithInt:([lightNumber intValue]-1)*7+3] toValue:[NSNumber numberWithInt:1]];
-                }
-                
-                
-                //NSLog(@"%@",tempBrightness);
-            }
+        LightIdentifier identifier = [self getLightIDFromChannel:lightNumber];
+        if (identifier == kLightParcan) {
+            [self setDMXChannelsForParcan:lightNumber params:parameters];
+        } else if (identifier == kLightMegapanel) {
+            [self setDMXChannelsForMegapanel:lightNumber params:parameters];
+        } else if (identifier == kLightTriphase) {
+            [self setDMXChannelsForTriphase:lightNumber params:parameters];
         }
+        
     }
     
     [self sendDMXSerialString];
     /*if (writeError) {
-        NSLog(@"Write error: %@",writeError);
-    }
-    NSLog(@"%@", [[NSString alloc] initWithBytes:&serialData length:sizeof(serialData) encoding:NSASCIIStringEncoding]);
-    */
-    [f release];
+     NSLog(@"Write error: %@",writeError);
+     }
+     NSLog(@"%@", [[NSString alloc] initWithBytes:&serialData length:sizeof(serialData) encoding:NSASCIIStringEncoding]);
+     */
 }
+
+#pragma mark - Light type handlers
+- (void)setDMXChannelsForParcan:(NSNumber *)lightNumber params:(NSDictionary *)params {
+    int lightChannelBase = ([lightNumber intValue]-1)*7;
+    
+    NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+    [f setNumberStyle:NSNumberFormatterDecimalStyle];
+    
+    for( NSString *aKey in params)
+    {
+        if ([aKey isEqualToString:@"brightness"]){
+            NSNumber *tempBrightness = [f numberFromString:[params objectForKey:aKey]];
+            /* The following line is a hack to make it work: it assumes all the lights have identical channels to multiply by 7
+             
+             The correct solution would be another function setValueOf:dmxChannel forLight:identifier which uses the below method
+             
+             (lightNum -1 ) * 7 + channel
+             
+             */
+            [self.dmxchannels setChannel:[NSNumber numberWithInt:[lightNumber intValue]*7] toValue:tempBrightness];
+            //NSLog(@"%@",tempBrightness);
+        }
+        if ([aKey isEqualToString:@"color"]){
+            NSString *tempColor = [params objectForKey:aKey];
+            
+            if ([tempColor isEqualToString:@"red"]) {
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+1] toValue:[NSNumber numberWithInt:1]];
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+2] toValue:[NSNumber numberWithInt:0]];
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+3] toValue:[NSNumber numberWithInt:0]];
+            }
+            
+            if ([tempColor isEqualToString:@"purple"]) {
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+1] toValue:[NSNumber numberWithInt:1]];
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+2] toValue:[NSNumber numberWithInt:0]];
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+3] toValue:[NSNumber numberWithInt:1]];
+            }
+            
+            if ([tempColor isEqualToString:@"blue"]) {
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+1] toValue:[NSNumber numberWithInt:0]];
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+2] toValue:[NSNumber numberWithInt:0]];
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+3] toValue:[NSNumber numberWithInt:1]];
+            }
+            
+            if ([tempColor isEqualToString:@"teal"]) {
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+1] toValue:[NSNumber numberWithInt:0]];
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+2] toValue:[NSNumber numberWithInt:1]];
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+3] toValue:[NSNumber numberWithInt:1]];
+            }
+            
+            if ([tempColor isEqualToString:@"green"]) {
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+1] toValue:[NSNumber numberWithInt:0]];
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+2] toValue:[NSNumber numberWithInt:1]];
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+3] toValue:[NSNumber numberWithInt:0]];
+            }
+            
+            if ([tempColor isEqualToString:@"white"]) {
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+1] toValue:[NSNumber numberWithInt:1]];
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+2] toValue:[NSNumber numberWithInt:1]];
+                [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+3] toValue:[NSNumber numberWithInt:1]];
+            }
+            if ([aKey isEqualToString:@"rgb"]){            
+                NSString *rgbString = [params objectForKey:aKey];
+                [self setChannelsFromRGBString:lightChannelBase rgbString:rgbString];                        
+            }  
+            
+            
+            //NSLog(@"%@",tempBrightness);
+        }  
+        [f release];
+    }
+}
+
+- (void)setDMXChannelsForMegapanel:(NSNumber *)lightNumber params:(NSDictionary *)params {
+    int lightChannelBase = MEGAPANEL_CHANNEL_BASE;
+    
+    for( NSString *aKey in params)
+    {
+        if ([aKey isEqualToString:@"rgb"]){            
+            NSString *rgbString = [params objectForKey:aKey];
+            [self setChannelsFromRGBString:lightChannelBase rgbString:rgbString];                        
+        }  else if ([aKey isEqualToString:@"brightness"]){
+            NSNumber *brightnessVal = [self getNumberFromString:[params objectForKey:aKey]];
+            [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+4] toValue:brightnessVal];
+        }
+    }
+}
+
+- (void)setDMXChannelsForTriphase:(NSNumber *)lightNumber params:(NSDictionary *)params {
+    int lightChannelBase = TRIPHASE_CHANNEL_BASE;
+    
+    for( NSString *aKey in params)
+    {
+        if ([aKey isEqualToString:@"color_selection"]){            
+            NSNumber *colorSelectionVal = [self getNumberFromString:[params objectForKey:aKey]];            
+            [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase] toValue:colorSelectionVal];
+        } else if ([aKey isEqualToString:@"rotation"]){
+            NSNumber *rotationVal = [self getNumberFromString:[params objectForKey:aKey]];
+            [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+1] toValue:rotationVal];
+        } else if ([aKey isEqualToString:@"strobe"]){
+            NSNumber *strobeVal = [self getNumberFromString:[params objectForKey:aKey]];
+            [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+2] toValue:strobeVal];
+        }  else if ([aKey isEqualToString:@"brightness"]){
+            NSNumber *brightnessVal = [self getNumberFromString:[params objectForKey:aKey]];
+            [self.dmxchannels setChannel:[NSNumber numberWithInt:lightChannelBase+3] toValue:brightnessVal];
+        }
+    }
+}
+
+#pragma mark - Helpers
+- (NSNumber *)getNumberFromString:(NSString *)floatString {
+    NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+    [f setNumberStyle:NSNumberFormatterDecimalStyle];
+    
+    NSNumber *tempVal = [f numberFromString:floatString];
+    [f release];
+    
+    return tempVal;
+}
+
+- (void)setChannelsFromRGBString:(int)channelBase rgbString:(NSString *)rgbString {
+    NSArray *colorVals = [rgbString componentsSeparatedByString:@","];
+    
+    int i = 0;
+    for (NSString *colorVal in colorVals) {
+        NSNumberFormatter * f = [[NSNumberFormatter alloc] init];        
+        [f setNumberStyle:NSNumberFormatterDecimalStyle];
+        
+        NSNumber *tColor = [f numberFromString:colorVal];
+        [f release];
+        
+        float cVal = [tColor floatValue];
+        
+        [self.dmxchannels setChannel:[NSNumber numberWithInt:channelBase+i] toValue:[NSNumber numberWithFloat:cVal/255.0]];
+        i++;
+    }
+}
+
+- (LightIdentifier)getLightIDFromChannel:(NSNumber *)lightNumber { 
+    
+    if ([lightNumber intValue] <= PARCAN_CHANNEL_THRESHOLD) {
+        return kLightParcan;
+    } else if([lightNumber intValue] <= MEGAPANEL_CHANNEL_THRESHOLD) {
+        return kLightMegapanel;
+    } else if([lightNumber intValue] <= TRIPHASE_CHANNEL_THRESHOLD) {
+        return kLightTriphase;
+    } else {
+        return kLightUnknown;
+    }
+}
+
+# pragma mark Serial Port Stuff
 
 -(void) sendDMXSerialString {
     NSMutableData *serialData = [self.dmxchannels generateSerialData];
@@ -148,8 +267,6 @@
     [self.port writeData:[serialData retain] error:&writeError];
     [serialData release];
 }
-
-# pragma mark Serial Port Stuff
 
 - (void)initPort
 {
@@ -174,7 +291,7 @@
             //The standard speeds defined in termios.h are listed near
             //the top of AMSerialPort.h. Those can be preceeded with a 'B' as below. However, I've had success
             //with non standard rates (such as the one for the MIDI protocol). Just omit the 'B' for those.
-			
+            
             [self.port setSpeed:B115200]; 
             
             
