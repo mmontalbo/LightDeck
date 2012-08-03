@@ -114,12 +114,11 @@ typedef enum {
 - (void)setDMXChannelsForParcan:(NSNumber *)lightNumber params:(NSDictionary *)params {
     int lightChannelBase = ([lightNumber intValue]-1)*7;
     
-    NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-    [f setNumberStyle:NSNumberFormatterDecimalStyle];
-    
     for( NSString *aKey in params)
     {
         if ([aKey isEqualToString:@"brightness"]){
+            NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+            [f setNumberStyle:NSNumberFormatterDecimalStyle];
             NSNumber *tempBrightness = [f numberFromString:[params objectForKey:aKey]];
             /* The following line is a hack to make it work: it assumes all the lights have identical channels to multiply by 7
              
