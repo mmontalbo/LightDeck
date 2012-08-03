@@ -11,7 +11,7 @@
 #define TRIPHASE_CHANNEL_THRESHOLD 8
 
 #define MEGAPANEL_CHANNEL_BASE 37
-#define TRIPHASE_CHANNEL_BASE 38
+#define TRIPHASE_CHANNEL_BASE 41
 
 typedef enum {
     kLightParcan,

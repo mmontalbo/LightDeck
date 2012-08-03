@@ -344,7 +344,7 @@
 			<key>channel</key>
 			<integer>43</integer>
 			<key>value</key>
-			<integer>255</integer>
+			<integer>0</integer>
 			<key>description</key>
 			<string>strobe</string>
 		</dict>
